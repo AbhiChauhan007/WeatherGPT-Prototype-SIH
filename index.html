@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WeatherGPT</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#eef6fb;
+    color:#17324d;
+}
+
+/* HEADER */
+
+header{
+    background:linear-gradient(135deg,#0877c9,#13a5c5);
+    color:white;
+    padding:15px 6%;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.logo{
+    width:62px;
+    height:62px;
+    object-fit:contain;
+    background:white;
+    border-radius:12px;
+}
+
+.brand{
+    flex:1;
+}
+
+header h1{
+    margin:0;
+    font-size:28px;
+}
+
+header p{
+    margin:4px 0 0;
+    font-size:13px;
+}
+
+/* TOP RIGHT */
+
+.header-right{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.location-info{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 14px;
+    background:rgba(0,0,0,.12);
+    border-radius:12px;
+}
+
+.location-icon{
+    font-size:21px;
+}
+
+.location-info b{
+    display:block;
+    font-size:14px;
+}
+
+.location-info small{
+    display:block;
+    font-size:11px;
+    opacity:.85;
+    margin-top:3px;
+}
+
+.date-time{
+    text-align:right;
+    min-width:125px;
+}
+
+.date-time b{
+    display:block;
+    font-size:13px;
+}
+
+.date-time span{
+    display:block;
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* MAIN */
+
+main{
+    max-width:1150px;
+    margin:25px auto;
+    padding:0 18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1.4fr .8fr;
+    gap:20px;
+}
+
+/* CARDS */
+
+.card{
+    background:white;
+    border-radius:17px;
+    padding:22px;
+    margin-bottom:20px;
+    box-shadow:0 5px 18px rgba(20,60,90,.10);
+}
+
+.card h2{
+    margin-top:0;
+    font-size:20px;
+}
+
+/* WEATHER */
+
+.location{
+    color:#60798c;
+    font-size:14px;
+}
+
+.temperature{
+    font-size:55px;
+    font-weight:bold;
+    margin:10px 0 0;
+}
+
+.weather-type{
+    font-size:17px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:20px;
+}
+
+.stat{
+    background:#f2f8fb;
+    padding:13px;
+    border-radius:12px;
+}
+
+.stat span{
+    font-size:13px;
+    color:#60798c;
+}
+
+.stat b{
+    display:block;
+    font-size:18px;
+    margin-top:5px;
+}
+
+/* INSIGHT */
+
+.insight{
+    background:#fff6df;
+    border-left:6px solid #f2a51a;
+    padding:18px;
+    border-radius:12px;
+}
+
+.insight-title{
+    font-weight:bold;
+    font-size:17px;
+}
+
+.risk-high{
+    display:inline-block;
+    margin:8px 0;
+    padding:6px 12px;
+    border-radius:20px;
+    background:#ffe0d5;
+    color:#b33b19;
+    font-weight:bold;
+}
+
+/* RISK */
+
+.risk-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 0;
+    border-bottom:1px solid #e5edf1;
+}
+
+.risk-row:last-child{
+    border-bottom:none;
+}
+
+.high{
+    color:#d64527;
+    font-weight:bold;
+}
+
+.medium{
+    color:#c48700;
+    font-weight:bold;
+}
+
+.low{
+    color:#29925b;
+    font-weight:bold;
+}
+
+/* RISK MAP */
+
+.map{
+    height:210px;
+    border-radius:14px;
+    background:
+    linear-gradient(135deg,#d9f1d9,#bce0ef);
+    position:relative;
+    overflow:hidden;
+}
+
+.road{
+    position:absolute;
+    width:130%;
+    height:18px;
+    background:#ffffff;
+    transform:rotate(-25deg);
+    top:90px;
+    left:-30px;
+}
+
+.zone{
+    position:absolute;
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:bold;
+    border:4px solid white;
+}
+
+.red{
+    background:#e44b35;
+    top:30px;
+    left:75px;
+}
+
+.orange{
+    background:#f0a51c;
+    top:110px;
+    left:210px;
+}
+
+.green{
+    background:#35a866;
+    top:55px;
+    right:70px;
+}
+
+.map-label{
+    position:absolute;
+    bottom:10px;
+    left:15px;
+    background:white;
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:12px;
+}
+
+/* ACTION */
+
+.action{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.action-box{
+    padding:14px;
+    border-radius:12px;
+    background:#f3f8fb;
+}
+
+.action-box b{
+    display:block;
+    margin-bottom:5px;
+}
+
+/* CHAT */
+
+.messages{
+    height:180px;
+    overflow:auto;
+    padding:5px;
+}
+
+.message{
+    padding:11px 14px;
+    border-radius:13px;
+    margin:8px 0;
+    max-width:82%;
+    font-size:14px;
+}
+
+.bot{
+    background:#e8f5ff;
+}
+
+.user{
+    background:#0877c9;
+    color:white;
+    margin-left:auto;
+}
+
+.chat-input{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+}
+
+.chat-input input{
+    flex:1;
+    padding:13px;
+    border:1px solid #cbd9e2;
+    border-radius:10px;
+    outline:none;
+}
+
+.chat-input button{
+    border:none;
+    background:#0877c9;
+    color:white;
+    padding:12px 20px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.quick{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.quick button{
+    border:1px solid #9cc9df;
+    background:#f0f9ff;
+    color:#08689f;
+    padding:8px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.quick button:hover{
+    background:#dff2fc;
+}
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    padding:20px;
+    color:#718795;
+    font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+    header{
+        padding:15px 20px;
+    }
+
+    .header-right{
+        display:none;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .action{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+    <img src="logo.png" class="logo">
+
+    <div class="brand">
+
+        <h1>WeatherGPT</h1>
+
+        <p>
+            From Weather Information to Actionable Decisions
+        </p>
+
+    </div>
+
+
+    <!-- CURRENT LOCATION + DATE TIME -->
+
+    <div class="header-right">
+
+        <div class="location-info">
+
+            <span class="location-icon">📍</span>
+
+            <div>
+
+                <b id="location">
+                    Dehradun, Uttarakhand
+                </b>
+
+                <small>
+                    Current Location
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="date-time">
+
+            <b id="date">
+                Loading...
+            </b>
+
+            <span id="time">
+                Loading...
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+<div class="grid">
+
+<!-- LEFT SIDE -->
+
+<div>
+
+<!-- CURRENT WEATHER -->
+
+<div class="card">
+
+<h2>🌦️ Current Weather</h2>
+
+<div class="location">
+📍 Dehradun, Uttarakhand • Demo Data
+</div>
+
+<div class="temperature">
+27°C
+</div>
+
+<div class="weather-type">
+Partly Cloudy
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<span>💧 Humidity</span>
+
+<b>72%</b>
+
+</div>
+
+
+<div class="stat">
+
+<span>💨 Wind</span>
+
+<b>14 km/h</b>
+
+</div>
+
+
+<div class="stat">
+
+<span>🌧️ Rain Chance</span>
+
+<b>70%</b>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- WEATHER INSIGHT -->
+
+<div class="card">
+
+<h2>⚠️ Weather Insight</h2>
+
+<div class="insight">
+
+<div class="insight-title">
+Heavy Rainfall Expected
+</div>
+
+<div class="risk-high">
+Risk Level: HIGH
+</div>
+
+<p>
+Heavy rainfall may occur during the evening.
+Low-lying and waterlogged areas may become risky.
+</p>
+
+<b>Recommended Action:</b>
+
+<p>
+Avoid low-lying roads and postpone unnecessary travel during peak rainfall.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- RISK MAP -->
+
+<div class="card">
+
+<h2>🗺️ Hyperlocal Risk Map</h2>
+
+<div class="map">
+
+<div class="road"></div>
+
+<div class="zone red">
+HIGH
+</div>
+
+<div class="zone orange">
+MED
+</div>
+
+<div class="zone green">
+SAFE
+</div>
+
+<div class="map-label">
+🔴 High Risk &nbsp; 🟠 Moderate &nbsp; 🟢 Safe
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+
+<div>
+
+<!-- RISK SNAPSHOT -->
+
+<div class="card">
+
+<h2>📊 Risk Snapshot</h2>
+
+<div class="risk-row">
+
+<span>🌧️ Rainfall</span>
+
+<span class="high">
+HIGH
+</span>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>🌊 Flood Risk</span>
+
+<span class="medium">
+MODERATE
+</span>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>🚗 Travel Risk</span>
+
+<span class="high">
+HIGH
+</span>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>⚡ Lightning</span>
+
+<span class="low">
+LOW
+</span>
+
+</div>
+
+</div>
+
+
+<!-- WHAT SHOULD I DO -->
+
+<div class="card">
+
+<h2>🚨 What Should I Do?</h2>
+
+<div class="action">
+
+<div class="action-box">
+
+<b>🚗 Traveler</b>
+
+Avoid low-lying routes.
+
+</div>
+
+
+<div class="action-box">
+
+<b>🌾 Farmer</b>
+
+Protect crops from heavy rain.
+
+</div>
+
+
+<div class="action-box">
+
+<b>🏠 Citizen</b>
+
+Stay alert during peak rainfall.
+
+</div>
+
+
+<div class="action-box">
+
+<b>🚑 Authority</b>
+
+Monitor vulnerable zones.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SOURCES -->
+
+<div class="card">
+
+<h2>🌐 Weather Intelligence</h2>
+
+<div class="risk-row">
+
+<span>Weather Forecast</span>
+
+<b>✓</b>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>Official Alerts</span>
+
+<b>✓</b>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>Satellite Data</span>
+
+<b>✓</b>
+
+</div>
+
+
+<div class="risk-row">
+
+<span>Forecast Models</span>
+
+<b>✓</b>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CHAT -->
+
+<div class="card">
+
+<h2>💬 Ask WeatherGPT</h2>
+
+<div class="messages" id="messages">
+
+<div class="message bot">
+
+Hello! Ask me about rainfall, travel safety, farming or weather risk.
+
+</div>
+
+</div>
+
+
+<div class="quick">
+
+<button onclick="ask('Will it rain today?')">
+Rain today?
+</button>
+
+<button onclick="ask('Is travel safe?')">
+Travel safe?
+</button>
+
+<button onclick="ask('What should farmers do?')">
+Farmer advice
+</button>
+
+<button onclick="ask('What is the risk?')">
+Risk level
+</button>
+
+</div>
+
+
+<div class="chat-input">
+
+<input
+id="input"
+placeholder="Ask about the weather..."
+>
+
+<button onclick="send()">
+Ask
+</button>
+
+</div>
+
+</div>
+
+</main>
+
+
+<footer>
+
+WeatherGPT • Prototype
+
+</footer>
+
+
+<script>
+
+/* =========================
+   LIVE DATE & TIME
+========================= */
+
+function updateDateTime(){
+
+    const now = new Date();
+
+    const dateOptions = {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    };
+
+    document.getElementById("date").innerText =
+        now.toLocaleDateString("en-IN", dateOptions);
+
+    document.getElementById("time").innerText =
+        now.toLocaleTimeString("en-IN", {
+            hour:"2-digit",
+            minute:"2-digit",
+            second:"2-digit"
+        });
+
+}
+
+updateDateTime();
+
+setInterval(updateDateTime,1000);
+
+
+/* =========================
+   WEATHER CHAT
+========================= */
+
+function getReply(question){
+
+    question = question.toLowerCase();
+
+    if(question.includes("rain")){
+
+        return "Heavy rainfall is possible this evening. Rainfall risk is HIGH. Avoid low-lying roads and monitor official alerts.";
+
+    }
+
+    if(question.includes("travel") || question.includes("safe")){
+
+        return "Travel risk is HIGH during peak rainfall. Avoid waterlogged and low-lying routes.";
+
+    }
+
+    if(question.includes("farmer")){
+
+        return "Farmers should protect crops from heavy rainfall and monitor local agricultural advisories.";
+
+    }
+
+    if(question.includes("risk")){
+
+        return "Current demo analysis shows HIGH rainfall risk, MODERATE flood risk and HIGH travel risk.";
+
+    }
+
+    return "Current demo analysis shows HIGH rainfall risk, MODERATE flood risk and HIGH travel risk. Please monitor official warnings.";
+
+}
+
+
+/* QUICK QUESTIONS */
+
+function ask(question){
+
+    let messages =
+        document.getElementById("messages");
+
+    messages.innerHTML +=
+        '<div class="message user">' +
+        question +
+        '</div>';
+
+    setTimeout(function(){
+
+        messages.innerHTML +=
+            '<div class="message bot">' +
+            getReply(question) +
+            '</div>';
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+    },300);
+
+}
+
+
+/* INPUT QUESTION */
+
+function send(){
+
+    let input =
+        document.getElementById("input");
+
+    if(input.value.trim() !== ""){
+
+        ask(input.value);
+
+        input.value = "";
+
+    }
+
+}
+
+
+/* ENTER KEY */
+
+document
+.getElementById("input")
+.addEventListener("keydown",function(event){
+
+    if(event.key === "Enter"){
+
+        send();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
