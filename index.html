@@ -4,559 +4,1166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>WeatherGPT</title>
+<title>MausamSetu | Weather Intelligence</title>
 
 <style>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    background: #eef6fb;
-    color: #18324a;
+html{
+    scroll-behavior:smooth;
 }
 
-/* HEADER */
-
-header {
-    background: linear-gradient(135deg, #0879b8, #16a6d9);
-    color: white;
-    padding: 20px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#eef6f8;
+    color:#17324d;
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root{
+    --dark:#10354b;
+    --dark2:#0c293b;
+    --primary:#147b82;
+    --primary2:#21a19b;
+    --blue:#2d83b7;
+    --green:#24916f;
+    --orange:#dc9a25;
+    --red:#d65d5d;
+    --purple:#7967b5;
+    --light:#f5fafb;
+    --text:#17324d;
+    --muted:#71838e;
+    --white:#ffffff;
+    --border:#dce9ed;
+    --shadow:0 7px 25px rgba(18,55,75,.08);
 }
 
-.logo {
-    width: 70px;
-    height: 70px;
-    object-fit: contain;
-    background: white;
-    border-radius: 50%;
-    padding: 4px;
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar{
+    background:var(--dark2);
+    color:white;
+    padding:9px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    font-size:13px;
 }
 
-header h1 {
-    font-size: 30px;
-    margin-bottom: 5px;
+.top-left,
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
 }
 
-header p {
-    font-size: 14px;
-    opacity: 0.95;
+.location-button{
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08);
+    color:white;
+    padding:7px 13px;
+    border-radius:20px;
+    cursor:pointer;
 }
 
-.header-right {
-    text-align: right;
-    font-size: 14px;
-    line-height: 1.7;
+.location-button:hover{
+    background:rgba(255,255,255,.16);
 }
 
-.location {
-    font-weight: bold;
-    font-size: 16px;
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+    background:white;
+    padding:14px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    position:sticky;
+    top:0;
+    z-index:50;
 }
 
-/* MAIN */
-
-.container {
-    width: 86%;
-    max-width: 1250px;
-    margin: 30px auto;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-.section-title {
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #123d5a;
+.brand img{
+    width:58px;
+    height:58px;
+    object-fit:contain;
 }
 
-.card {
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
+.brand h1{
+    color:var(--primary);
+    font-size:25px;
 }
 
-/* CURRENT WEATHER */
-
-.weather-card {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 25px;
-    align-items: stretch;
+.brand p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:3px;
 }
 
-.weather-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.header-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
 
-.location-name {
-    font-size: 17px;
-    color: #5d7485;
-    margin-bottom: 10px;
+.status{
+    background:#e5f7ef;
+    color:#18784d;
+    padding:8px 13px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
 }
 
-.temperature {
-    font-size: 58px;
-    font-weight: bold;
-    color: #0879b8;
+.language{
+    border:1px solid var(--border);
+    padding:8px;
+    border-radius:10px;
+    background:white;
 }
 
-.condition {
-    font-size: 20px;
-    margin: 5px 0 20px;
-}
 
-.weather-details {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+/* =========================================================
+   HERO
+========================================================= */
 
-.detail-box {
-    background: #eef8fc;
-    padding: 12px 16px;
-    border-radius: 12px;
-    min-width: 120px;
-}
-
-.detail-box span {
-    display: block;
-    font-size: 12px;
-    color: #688090;
-    margin-bottom: 4px;
-}
-
-.detail-box strong {
-    font-size: 15px;
-}
-
-/* DEHRADUN IMAGE */
-
-.weather-image-box {
-    position: relative;
-    min-height: 270px;
-    border-radius: 18px;
-    overflow: hidden;
-}
-
-.weather-image-box img {
-    width: 100%;
-    height: 100%;
-    min-height: 270px;
-    object-fit: cover;
-    display: block;
-}
-
-.image-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 22px;
-    color: white;
-    background: linear-gradient(
-        transparent,
-        rgba(0,0,0,0.75)
-    );
-}
-
-.image-overlay h3 {
-    font-size: 22px;
-    margin-bottom: 5px;
-}
-
-.image-overlay p {
-    font-size: 13px;
-}
-
-/* WEATHER INSIGHT */
-
-.insight {
-    background: linear-gradient(135deg, #e9f8ff, #ffffff);
-    border-left: 6px solid #0879b8;
-}
-
-.insight-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 0.7fr 1fr;
-    gap: 20px;
-    align-items: center;
-}
-
-.insight-box {
-    padding: 15px;
-    border-radius: 12px;
-    background: white;
-}
-
-.insight-box h4 {
-    color: #0879b8;
-    margin-bottom: 8px;
-}
-
-.risk-high {
-    color: #d84b32;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.action {
-    font-weight: bold;
-    color: #176b43;
-}
-
-/* HYPERLOCAL MAP */
-
-.map {
-    height: 300px;
-    border-radius: 18px;
-    position: relative;
-    overflow: hidden;
+.hero{
+    min-height:350px;
+    padding:55px 7%;
+    color:white;
+    display:flex;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
 
     background:
-        linear-gradient(
-            30deg,
-            transparent 48%,
-            rgba(255,255,255,.8) 49%,
-            transparent 51%
-        ),
-        linear-gradient(
-            120deg,
-            transparent 48%,
-            rgba(255,255,255,.7) 49%,
-            transparent 51%
-        ),
-        #9ac7d8;
+    linear-gradient(90deg,rgba(9,45,65,.92),rgba(9,45,65,.58)),
+    url("dehradun_bg.png") center/cover;
 }
 
-.map::before {
-    content: "HYPERLOCAL RISK MAP";
-    position: absolute;
-    top: 18px;
-    left: 20px;
-    background: white;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: bold;
-    color: #31586d;
+.hero-content{
+    max-width:780px;
 }
 
-.map-zone {
-    position: absolute;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 12px;
-    font-weight: bold;
+.hero h2{
+    font-size:44px;
+    line-height:1.12;
+    margin-bottom:14px;
 }
 
-.zone-red {
-    width: 150px;
-    height: 150px;
-    background: rgba(225, 67, 48, 0.45);
-    top: 75px;
-    left: 25%;
+.hero p{
+    font-size:17px;
+    line-height:1.65;
+    color:#e5f4f7;
+    max-width:700px;
 }
 
-.zone-yellow {
-    width: 130px;
-    height: 130px;
-    background: rgba(240, 190, 45, 0.45);
-    top: 100px;
-    right: 18%;
+.hero-location{
+    display:inline-block;
+    margin-top:22px;
+    padding:10px 17px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.1);
+    border-radius:25px;
 }
 
-.map-pin {
-    position: absolute;
-    top: 135px;
-    left: 47%;
-    background: #0879b8;
-    color: white;
-    padding: 9px 13px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
+.hero-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+    flex-wrap:wrap;
 }
 
-/* RISK SNAPSHOT */
-
-.risk-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+.hero-button{
+    border:0;
+    padding:11px 17px;
+    border-radius:22px;
+    cursor:pointer;
+    background:white;
+    color:var(--dark);
+    font-weight:bold;
 }
 
-.risk-card {
-    background: #f7fbfd;
-    padding: 18px;
-    border-radius: 14px;
-    text-align: center;
+.hero-button.secondary{
+    background:rgba(255,255,255,.13);
+    color:white;
+    border:1px solid rgba(255,255,255,.3);
 }
 
-.risk-card h3 {
-    font-size: 15px;
-    margin-bottom: 10px;
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container{
+    width:90%;
+    max-width:1350px;
+    margin:32px auto;
 }
 
-.risk-value {
-    font-size: 19px;
-    font-weight: bold;
+.section-title{
+    margin-bottom:16px;
 }
 
-.high {
-    color: #d84b32;
+.section-title h2{
+    font-size:23px;
 }
 
-.medium {
-    color: #d69b18;
+.section-title p{
+    color:var(--muted);
+    font-size:14px;
+    margin-top:5px;
 }
 
-.advisory {
-    color: #0879b8;
+
+/* =========================================================
+   GENERAL CARD
+========================================================= */
+
+.card{
+    background:white;
+    border-radius:19px;
+    padding:20px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(220,233,237,.5);
 }
 
-/* ACTION */
-
-.action-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:15px;
 }
 
-.action-card {
-    padding: 20px;
-    border-radius: 15px;
-    background: #f7fbfd;
-    border: 1px solid #dcecf3;
+.card-title h3{
+    font-size:18px;
 }
 
-.action-card h3 {
-    margin-bottom: 10px;
-    color: #0879b8;
+.card-title span{
+    color:var(--muted);
+    font-size:12px;
 }
 
-.action-card p {
-    font-size: 14px;
-    line-height: 1.6;
+
+/* =========================================================
+   CURRENT WEATHER
+========================================================= */
+
+.weather-grid{
+    display:grid;
+    grid-template-columns:1.5fr repeat(4,1fr);
+    gap:14px;
 }
 
-/* DATA SOURCES */
-
-.source-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+.current-weather{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
-.source {
-    padding: 18px;
-    background: #eef8fc;
-    border-radius: 14px;
-    text-align: center;
+.weather-icon{
+    font-size:60px;
 }
 
-.source h3 {
-    font-size: 15px;
-    margin-bottom: 7px;
+.temperature{
+    font-size:42px;
+    font-weight:bold;
 }
 
-.source p {
-    font-size: 12px;
-    color: #617887;
+.condition{
+    color:var(--muted);
+    margin-top:4px;
 }
 
-/* CHAT */
-
-.chat-box {
-    background: #f5faff;
-    border-radius: 15px;
-    padding: 20px;
-    min-height: 150px;
-    max-height: 400px;
-    overflow-y: auto;
+.metric{
+    text-align:center;
 }
 
-.chat-message {
-    background: white;
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-    max-width: 85%;
-    line-height: 1.5;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.metric-icon{
+    font-size:25px;
+    margin-bottom:8px;
 }
 
-.bot {
-    border-left: 4px solid #0879b8;
+.metric-value{
+    font-size:23px;
+    font-weight:bold;
 }
 
-.user {
-    margin-left: auto;
-    border-right: 4px solid #16a6d9;
-    background: #e8f7fd;
+.metric-label{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
 }
 
-/* CHAT INPUT */
 
-.chat-input-area {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
+/* =========================================================
+   DECISION PULSE
+========================================================= */
+
+.decision-grid{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr 1fr;
+    gap:15px;
+    margin-top:22px;
 }
 
-.chat-input-area input {
-    flex: 1;
-    padding: 14px 16px;
-    border: 1px solid #cbdde6;
-    border-radius: 12px;
-    outline: none;
-    font-size: 14px;
+.pulse{
+    text-align:center;
 }
 
-.chat-input-area input:focus {
-    border-color: #0879b8;
-    box-shadow: 0 0 0 2px rgba(8,121,184,0.08);
+.score{
+    width:145px;
+    height:145px;
+    border-radius:50%;
+    border:13px solid #f1c75b;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    margin:12px auto;
 }
 
-.chat-input-area button {
-    border: none;
-    padding: 0 22px;
-    border-radius: 12px;
-    background: #0879b8;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 14px;
+.score strong{
+    font-size:38px;
 }
 
-.chat-input-area button:hover {
-    background: #065d8e;
+.score span{
+    color:var(--muted);
+    font-size:12px;
 }
 
-/* QUICK BUTTONS */
-
-.quick-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 15px;
+.risk-medium{
+    color:#a56b00;
+    font-weight:bold;
 }
 
-.quick-buttons button {
-    border: none;
-    padding: 10px 15px;
-    border-radius: 20px;
-    background: #0879b8;
-    color: white;
-    cursor: pointer;
-    font-size: 13px;
+.insight{
+    padding:12px;
+    background:#eff9f7;
+    border-left:4px solid var(--primary2);
+    border-radius:10px;
+    margin-bottom:9px;
+    font-size:13px;
+    line-height:1.5;
 }
 
-.quick-buttons button:hover {
-    background: #065d8e;
+
+/* =========================================================
+   MY DAY
+========================================================= */
+
+.day-plan{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
 }
 
-/* FOOTER */
-
-footer {
-    background: #123d5a;
-    color: white;
-    text-align: center;
-    padding: 18px;
-    margin-top: 40px;
-    font-size: 13px;
+.day-item{
+    text-align:center;
+    padding:13px 7px;
+    background:#f5fafb;
+    border-radius:13px;
 }
 
-/* RESPONSIVE */
+.day-item .day-icon{
+    font-size:25px;
+    margin:7px 0;
+}
 
-@media (max-width: 900px) {
+.day-item .hour{
+    font-size:12px;
+    color:var(--muted);
+}
 
-    header {
-        flex-direction: column;
-        align-items: flex-start;
+.day-item .rain{
+    font-size:12px;
+    color:var(--primary);
+    margin-top:4px;
+}
+
+
+/* =========================================================
+   RISK TIMELINE
+========================================================= */
+
+.timeline{
+    height:170px;
+    display:flex;
+    align-items:end;
+    gap:10px;
+    margin-top:12px;
+}
+
+.timeline-item{
+    flex:1;
+    text-align:center;
+}
+
+.bar-wrapper{
+    height:110px;
+    display:flex;
+    align-items:end;
+    justify-content:center;
+}
+
+.bar{
+    width:32px;
+    border-radius:8px 8px 3px 3px;
+    background:#4da8ae;
+}
+
+.timeline-time{
+    font-size:12px;
+    margin-top:7px;
+}
+
+.timeline-value{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:3px;
+}
+
+
+/* =========================================================
+   7 DAY FORECAST
+========================================================= */
+
+.forecast{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:8px;
+}
+
+.forecast-day{
+    text-align:center;
+    padding:14px 5px;
+    background:#f6fafb;
+    border-radius:14px;
+}
+
+.forecast-day strong{
+    font-size:13px;
+}
+
+.forecast-icon{
+    font-size:28px;
+    margin:10px 0;
+}
+
+.forecast-temp{
+    font-weight:bold;
+}
+
+.forecast-rain{
+    color:var(--primary);
+    font-size:11px;
+    margin-top:5px;
+}
+
+
+/* =========================================================
+   ACTION CENTER
+========================================================= */
+
+.action-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.action-card{
+    padding:19px;
+    border-radius:17px;
+    background:white;
+    box-shadow:var(--shadow);
+    border-top:4px solid var(--primary);
+}
+
+.action-icon{
+    font-size:29px;
+    margin-bottom:10px;
+}
+
+.action-card h3{
+    margin-bottom:8px;
+    font-size:17px;
+}
+
+.action-card p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+}
+
+
+/* =========================================================
+   HAZARDS
+========================================================= */
+
+.hazard-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.hazard{
+    padding:17px;
+    border-radius:15px;
+    background:#f7fafb;
+}
+
+.hazard-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.hazard-icon{
+    font-size:28px;
+}
+
+.hazard-status{
+    font-size:11px;
+    padding:5px 9px;
+    border-radius:15px;
+}
+
+.low{
+    background:#e5f7ef;
+    color:#18784d;
+}
+
+.medium{
+    background:#fff3d9;
+    color:#9b6907;
+}
+
+.high{
+    background:#ffe4e4;
+    color:#ad3f3f;
+}
+
+.hazard h3{
+    margin-top:10px;
+    font-size:15px;
+}
+
+.hazard p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+
+/* =========================================================
+   AI AREA
+========================================================= */
+
+.ai-grid{
+    display:grid;
+    grid-template-columns:1.35fr .65fr;
+    gap:16px;
+}
+
+.chat{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.chat-header{
+    background:#123e55;
+    color:white;
+    padding:17px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.ai-badge{
+    background:#31b89d;
+    padding:5px 9px;
+    border-radius:15px;
+    font-size:10px;
+}
+
+.chat-body{
+    height:320px;
+    padding:17px;
+    overflow-y:auto;
+    background:#f4f9fa;
+}
+
+.message{
+    max-width:82%;
+    padding:11px 14px;
+    margin-bottom:11px;
+    border-radius:14px;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.bot{
+    background:white;
+    border:1px solid #e1ebee;
+}
+
+.user{
+    background:#176e79;
+    color:white;
+    margin-left:auto;
+}
+
+.quick{
+    padding:10px 14px;
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.quick button{
+    border:1px solid #cfe1e4;
+    background:#f6fbfb;
+    color:#27606a;
+    padding:7px 10px;
+    border-radius:18px;
+    cursor:pointer;
+}
+
+.chat-input{
+    display:flex;
+    gap:7px;
+    padding:12px;
+    border-top:1px solid var(--border);
+}
+
+.chat-input input{
+    flex:1;
+    border:1px solid #d4e1e5;
+    border-radius:23px;
+    padding:11px 14px;
+    outline:none;
+}
+
+.chat-button{
+    border:0;
+    background:var(--primary);
+    color:white;
+    padding:0 15px;
+    border-radius:22px;
+    cursor:pointer;
+}
+
+.voice{
+    background:#725fa8;
+}
+
+
+/* =========================================================
+   QUICK DECISION
+========================================================= */
+
+.quick-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.quick-item{
+    padding:12px;
+    background:#f3f9fa;
+    border-radius:12px;
+    font-size:13px;
+}
+
+.quick-item b{
+    display:block;
+    margin-bottom:4px;
+}
+
+
+/* =========================================================
+   AIR QUALITY
+========================================================= */
+
+.aqi-box{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.aqi-score{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#e5f7ef;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+}
+
+.aqi-score strong{
+    font-size:30px;
+    color:#19845b;
+}
+
+.aqi-score span{
+    font-size:11px;
+    color:var(--muted);
+}
+
+.aqi-info{
+    flex:1;
+}
+
+.aqi-bar{
+    height:9px;
+    background:#e7eeee;
+    border-radius:10px;
+    margin-top:12px;
+    overflow:hidden;
+}
+
+.aqi-fill{
+    width:35%;
+    height:100%;
+    background:#37a879;
+}
+
+
+/* =========================================================
+   SUN INFO
+========================================================= */
+
+.sun-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.sun{
+    background:#f7fafb;
+    padding:15px;
+    border-radius:13px;
+    text-align:center;
+}
+
+.sun-icon{
+    font-size:28px;
+}
+
+.sun-time{
+    font-size:20px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.sun-label{
+    color:var(--muted);
+    font-size:12px;
+}
+
+
+/* =========================================================
+   LOCATION COMPARE
+========================================================= */
+
+.compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.compare-box{
+    background:#f5fafb;
+    padding:17px;
+    border-radius:15px;
+}
+
+.compare-box h3{
+    font-size:15px;
+}
+
+.compare-temp{
+    font-size:30px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.compare-info{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+
+/* =========================================================
+   CHECKLIST
+========================================================= */
+
+.checklist{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.check{
+    padding:12px;
+    background:#f5fafb;
+    border-radius:11px;
+    display:flex;
+    gap:9px;
+    align-items:center;
+    font-size:13px;
+}
+
+.check input{
+    width:17px;
+    height:17px;
+}
+
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.alert{
+    margin-top:25px;
+    padding:19px;
+    border-radius:16px;
+    background:#fff5df;
+    border-left:5px solid #dc9a25;
+}
+
+.alert h3{
+    font-size:17px;
+}
+
+.alert p{
+    font-size:13px;
+    margin-top:7px;
+    line-height:1.5;
+}
+
+.alert-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    flex-wrap:wrap;
+}
+
+.alert button{
+    border:0;
+    padding:9px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    background:#d99319;
+    color:white;
+}
+
+.alert button.secondary{
+    background:#f1dfbd;
+    color:#805d1b;
+}
+
+
+/* =========================================================
+   SAFE PLACES
+========================================================= */
+
+.safe-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.safe{
+    padding:17px;
+    background:white;
+    box-shadow:var(--shadow);
+    border-radius:15px;
+}
+
+.safe-icon{
+    font-size:27px;
+}
+
+.safe h3{
+    margin-top:8px;
+    font-size:15px;
+}
+
+.safe p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+
+/* =========================================================
+   SOURCES
+========================================================= */
+
+.sources{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.source{
+    background:white;
+    padding:17px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:var(--shadow);
+}
+
+.source-icon{
+    font-size:27px;
+}
+
+.source b{
+    display:block;
+    margin-top:7px;
+}
+
+.source span{
+    color:var(--muted);
+    font-size:11px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    background:var(--dark2);
+    color:#cbdbe2;
+    text-align:center;
+    padding:30px;
+    margin-top:45px;
+    font-size:13px;
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-content{
+    background:white;
+    width:100%;
+    max-width:480px;
+    border-radius:20px;
+    padding:25px;
+}
+
+.modal-content h2{
+    margin-bottom:10px;
+}
+
+.modal-content p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+}
+
+.modal-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-buttons button{
+    padding:10px 15px;
+    border:0;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+.close{
+    background:#e8eff1;
+}
+
+.confirm{
+    background:var(--primary);
+    color:white;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .weather-grid{
+        grid-template-columns:repeat(3,1fr);
     }
 
-    .header-right {
-        text-align: left;
+    .weather-grid .current-weather{
+        grid-column:span 3;
     }
 
-    .weather-card {
-        grid-template-columns: 1fr;
+    .decision-grid{
+        grid-template-columns:1fr 1fr;
     }
 
-    .insight-grid {
-        grid-template-columns: 1fr;
+    .hazard-grid{
+        grid-template-columns:1fr 1fr;
     }
 
-    .risk-grid,
+    .ai-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sources{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+
+@media(max-width:800px){
+
+    .day-plan{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .forecast{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .action-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .safe-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .hero h2{
+        font-size:35px;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    header{
+        flex-direction:column;
+        gap:12px;
+        align-items:flex-start;
+    }
+
+    .header-actions{
+        width:100%;
+        justify-content:space-between;
+    }
+
+    .hero{
+        padding:40px 6%;
+    }
+
+    .hero h2{
+        font-size:29px;
+    }
+
+    .container{
+        width:93%;
+    }
+
+    .weather-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .weather-grid .current-weather{
+        grid-column:span 2;
+    }
+
+    .decision-grid{
+        grid-template-columns:1fr;
+    }
+
+    .day-plan{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .forecast{
+        grid-template-columns:repeat(2,1fr);
+    }
+
     .action-grid,
-    .source-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-
-    .container {
-        width: 92%;
+    .hazard-grid,
+    .sources,
+    .safe-grid{
+        grid-template-columns:1fr;
     }
 
-    header {
-        padding: 18px 4%;
+    .timeline{
+        gap:3px;
     }
 
-    header h1 {
-        font-size: 25px;
+    .bar{
+        width:20px;
     }
 
-    .logo {
-        width: 58px;
-        height: 58px;
+    .aqi-box{
+        flex-direction:column;
+        align-items:flex-start;
     }
 
-    .temperature {
-        font-size: 48px;
-    }
-
-    .risk-grid,
-    .action-grid,
-    .source-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .weather-image-box {
-        min-height: 220px;
-    }
-
-    .weather-image-box img {
-        min-height: 220px;
-    }
-
-    .chat-input-area {
-        flex-direction: column;
-    }
-
-    .chat-input-area button {
-        padding: 12px;
+    .compare{
+        grid-template-columns:1fr;
     }
 
 }
@@ -568,21 +1175,57 @@ footer {
 <body>
 
 
-<!-- HEADER -->
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<div class="topbar">
+
+    <div class="top-left">
+
+        <span id="currentDate">
+            📅 Loading date...
+        </span>
+
+        <span id="currentTime">
+            🕒 Loading time...
+        </span>
+
+    </div>
+
+
+    <div class="top-right">
+
+        <span id="locationText">
+            📍 Dehradun, Uttarakhand
+        </span>
+
+        <button
+            class="location-button"
+            onclick="detectLocation()"
+        >
+            📍 Use My Location
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header>
 
-    <div class="header-left">
+    <div class="brand">
 
-        <img
-            src="logo.png"
-            class="logo"
-            alt="WeatherGPT Logo"
-        >
+        <img src="logo.png" alt="MausamSetu Logo">
 
         <div>
 
-            <h1>WeatherGPT</h1>
+            <h1>MausamSetu</h1>
 
             <p>
                 From Weather Information to Actionable Decisions
@@ -593,92 +1236,120 @@ footer {
     </div>
 
 
-    <div class="header-right">
+    <div class="header-actions">
 
-        <div class="location">
-            📍 Dehradun, Uttarakhand
+        <select
+            class="language"
+            onchange="changeLanguage(this.value)"
+        >
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+        </select>
+
+        <div class="status">
+            ● Prototype
         </div>
-
-        <div>
-            Current Location
-        </div>
-
-        <div id="date"></div>
-
-        <div id="time"></div>
 
     </div>
 
 </header>
 
 
-<div class="container">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h2>
+            Know the Weather.<br>
+            Understand the Risk.
+        </h2>
+
+        <p>
+            MausamSetu brings weather, hazards, risk analysis
+            and practical recommendations together so you can
+            make better everyday decisions.
+        </p>
 
 
-<!-- CURRENT WEATHER -->
-
-<h2 class="section-title">
-    Current Weather
-</h2>
-
-
-<div class="card weather-card">
-
-
-    <div class="weather-info">
-
-        <div class="location-name">
+        <div
+            class="hero-location"
+            id="heroLocation"
+        >
             📍 Dehradun, Uttarakhand
         </div>
 
 
-        <div class="temperature">
-            27°C
+        <div class="hero-buttons">
+
+            <button
+                class="hero-button"
+                onclick="scrollToAI()"
+            >
+                🤖 Ask MausamSetu
+            </button>
+
+            <button
+                class="hero-button secondary"
+                onclick="emergencyMode()"
+            >
+                🚨 Emergency Mode
+            </button>
+
         </div>
 
+    </div>
 
-        <div class="condition">
-            ⛅ Partly Cloudy
-        </div>
+</section>
 
 
-        <div class="weather-details">
 
-            <div class="detail-box">
+<div class="container">
 
-                <span>
-                    Humidity
-                </span>
 
-                <strong>
-                    72%
-                </strong>
+<!-- =========================================================
+     CURRENT WEATHER
+========================================================= -->
 
+<div class="section-title">
+
+    <h2>Current Weather</h2>
+
+    <p>
+        Live-style weather dashboard for your selected location
+    </p>
+
+</div>
+
+
+<div class="weather-grid">
+
+
+    <div class="card">
+
+        <div class="current-weather">
+
+            <div class="weather-icon">
+                🌤️
             </div>
 
+            <div>
 
-            <div class="detail-box">
+                <div class="temperature">
+                    27°C
+                </div>
 
-                <span>
-                    Wind
-                </span>
+                <div>
+                    Partly Cloudy
+                </div>
 
-                <strong>
-                    14 km/h
-                </strong>
-
-            </div>
-
-
-            <div class="detail-box">
-
-                <span>
-                    Rain Chance
-                </span>
-
-                <strong>
-                    70%
-                </strong>
+                <div class="condition">
+                    Feels like 29°C
+                </div>
 
             </div>
 
@@ -687,24 +1358,199 @@ footer {
     </div>
 
 
-    <!-- DEHRADUN IMAGE -->
+    <div class="card metric">
 
-    <div class="weather-image-box">
+        <div class="metric-icon">
+            🌧️
+        </div>
 
-        <img
-            src="dehradun_bg.png"
-            alt="Dehradun Weather"
-        >
+        <div class="metric-value">
+            70%
+        </div>
 
-        <div class="image-overlay">
+        <div class="metric-label">
+            Rain Probability
+        </div>
 
-            <h3>
-                Dehradun Weather
-            </h3>
+    </div>
 
-            <p>
-                Local weather conditions and forecast insight
-            </p>
+
+    <div class="card metric">
+
+        <div class="metric-icon">
+            💨
+        </div>
+
+        <div class="metric-value">
+            14
+        </div>
+
+        <div class="metric-label">
+            Wind km/h
+        </div>
+
+    </div>
+
+
+    <div class="card metric">
+
+        <div class="metric-icon">
+            💧
+        </div>
+
+        <div class="metric-value">
+            72%
+        </div>
+
+        <div class="metric-label">
+            Humidity
+        </div>
+
+    </div>
+
+
+    <div class="card metric">
+
+        <div class="metric-icon">
+            👁️
+        </div>
+
+        <div class="metric-value">
+            8 km
+        </div>
+
+        <div class="metric-label">
+            Visibility
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DECISION PULSE
+========================================================= -->
+
+<div class="decision-grid">
+
+
+    <div class="card pulse">
+
+        <div class="card-title">
+
+            <h3>Decision Pulse</h3>
+
+            <span>Overall Risk</span>
+
+        </div>
+
+
+        <div class="score">
+
+            <strong>68</strong>
+
+            <span>/ 100</span>
+
+        </div>
+
+
+        <div class="risk-medium">
+            Moderate–High Risk
+        </div>
+
+
+        <p style="
+            color:var(--muted);
+            font-size:12px;
+            margin-top:8px;
+        ">
+            Based on rainfall, wind,
+            exposure and local conditions.
+        </p>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <h3>Weather → Risk → Action</h3>
+
+            <span>Decision Intelligence</span>
+
+        </div>
+
+
+        <div class="insight">
+
+            <b>🌧 Weather</b><br>
+
+            Heavy rainfall may develop
+            during the evening.
+
+        </div>
+
+
+        <div class="insight">
+
+            <b>⚠️ Risk</b><br>
+
+            Low-lying roads may become
+            difficult to travel.
+
+        </div>
+
+
+        <div class="insight">
+
+            <b>✅ Action</b><br>
+
+            Avoid exposed routes during
+            peak rainfall and monitor
+            official warnings.
+
+        </div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <h3>Today's Summary</h3>
+
+            <span>Quick View</span>
+
+        </div>
+
+
+        <div class="quick-list">
+
+            <div class="quick-item">
+                <b>☂ Carry</b>
+                Umbrella or raincoat
+            </div>
+
+            <div class="quick-item">
+                <b>🚌 Travel</b>
+                Caution after 6 PM
+            </div>
+
+            <div class="quick-item">
+                <b>🏃 Outdoor</b>
+                Better before evening
+            </div>
+
+            <div class="quick-item">
+                <b>📢 Monitor</b>
+                Official alerts
+            </div>
 
         </div>
 
@@ -714,62 +1560,448 @@ footer {
 
 
 
-<!-- WEATHER INSIGHT -->
+<!-- =========================================================
+     MY DAY
+========================================================= -->
 
-<h2 class="section-title">
-    Weather Insight
-</h2>
+<div class="card" style="margin-top:22px;">
+
+    <div class="card-title">
+
+        <h3>📅 My Day — Weather Plan</h3>
+
+        <span>Today</span>
+
+    </div>
 
 
-<div class="card insight">
-
-    <div class="insight-grid">
+    <div class="day-plan">
 
 
-        <div class="insight-box">
+        <div class="day-item">
 
-            <h4>
-                🌧️ Weather
-            </h4>
+            <div class="hour">8 AM</div>
 
-            <p>
-                Heavy rainfall is possible during the evening.
-                Cloud activity is expected to increase.
-            </p>
+            <div class="day-icon">
+                ☀️
+            </div>
+
+            <b>24°C</b>
+
+            <div class="rain">
+                Rain 10%
+            </div>
 
         </div>
 
 
-        <div class="insight-box">
+        <div class="day-item">
 
-            <h4>
-                ⚠️ Risk
-            </h4>
+            <div class="hour">11 AM</div>
 
-            <div class="risk-high">
+            <div class="day-icon">
+                🌤️
+            </div>
+
+            <b>27°C</b>
+
+            <div class="rain">
+                Rain 20%
+            </div>
+
+        </div>
+
+
+        <div class="day-item">
+
+            <div class="hour">2 PM</div>
+
+            <div class="day-icon">
+                ☁️
+            </div>
+
+            <b>28°C</b>
+
+            <div class="rain">
+                Rain 35%
+            </div>
+
+        </div>
+
+
+        <div class="day-item">
+
+            <div class="hour">6 PM</div>
+
+            <div class="day-icon">
+                🌧️
+            </div>
+
+            <b>25°C</b>
+
+            <div class="rain">
+                Rain 60%
+            </div>
+
+        </div>
+
+
+        <div class="day-item">
+
+            <div class="hour">8 PM</div>
+
+            <div class="day-icon">
+                ⛈️
+            </div>
+
+            <b>23°C</b>
+
+            <div class="rain">
+                Rain 80%
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     RAIN TIMELINE
+========================================================= -->
+
+<div class="card" style="margin-top:22px;">
+
+    <div class="card-title">
+
+        <h3>🌧️ Rain Risk Timeline</h3>
+
+        <span>Next 10 Hours</span>
+
+    </div>
+
+
+    <div class="timeline">
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:25%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                2 PM
+            </div>
+
+            <div class="timeline-value">
+                20%
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:40%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                4 PM
+            </div>
+
+            <div class="timeline-value">
+                35%
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:62%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                6 PM
+            </div>
+
+            <div class="timeline-value">
+                60%
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:85%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                8 PM
+            </div>
+
+            <div class="timeline-value">
+                80%
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:70%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                10 PM
+            </div>
+
+            <div class="timeline-value">
+                65%
+            </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+            <div class="bar-wrapper">
+                <div
+                    class="bar"
+                    style="height:40%;"
+                ></div>
+            </div>
+
+            <div class="timeline-time">
+                12 AM
+            </div>
+
+            <div class="timeline-value">
+                40%
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     7 DAY FORECAST
+========================================================= -->
+
+<div style="margin-top:30px;" class="section-title">
+
+    <h2>📅 7-Day Weather Outlook</h2>
+
+    <p>
+        Plan your week using expected weather trends
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <div class="forecast">
+
+
+        <div class="forecast-day">
+            <strong>Today</strong>
+            <div class="forecast-icon">🌧️</div>
+            <div class="forecast-temp">27° / 22°</div>
+            <div class="forecast-rain">70% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Tue</strong>
+            <div class="forecast-icon">🌦️</div>
+            <div class="forecast-temp">28° / 22°</div>
+            <div class="forecast-rain">55% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Wed</strong>
+            <div class="forecast-icon">☁️</div>
+            <div class="forecast-temp">29° / 23°</div>
+            <div class="forecast-rain">35% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Thu</strong>
+            <div class="forecast-icon">🌤️</div>
+            <div class="forecast-temp">30° / 23°</div>
+            <div class="forecast-rain">25% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Fri</strong>
+            <div class="forecast-icon">🌧️</div>
+            <div class="forecast-temp">27° / 21°</div>
+            <div class="forecast-rain">65% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Sat</strong>
+            <div class="forecast-icon">⛈️</div>
+            <div class="forecast-temp">26° / 21°</div>
+            <div class="forecast-rain">75% rain</div>
+        </div>
+
+
+        <div class="forecast-day">
+            <strong>Sun</strong>
+            <div class="forecast-icon">🌤️</div>
+            <div class="forecast-temp">28° / 22°</div>
+            <div class="forecast-rain">30% rain</div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     HAZARD DETECTION
+========================================================= -->
+
+<div style="margin-top:30px;" class="section-title">
+
+    <h2>⚠️ Hazard Monitor</h2>
+
+    <p>
+        Identify weather conditions that may affect safety
+    </p>
+
+</div>
+
+
+<div class="hazard-grid">
+
+
+    <div class="hazard">
+
+        <div class="hazard-top">
+
+            <div class="hazard-icon">
+                🌧️
+            </div>
+
+            <span class="hazard-status high">
                 HIGH
+            </span>
+
+        </div>
+
+        <h3>Heavy Rain</h3>
+
+        <p>
+            Higher rainfall probability
+            during evening hours.
+        </p>
+
+    </div>
+
+
+    <div class="hazard">
+
+        <div class="hazard-top">
+
+            <div class="hazard-icon">
+                🌊
             </div>
 
-            <p>
-                Rainfall & local flooding risk
-            </p>
+            <span class="hazard-status medium">
+                WATCH
+            </span>
 
         </div>
 
+        <h3>Waterlogging</h3>
 
-        <div class="insight-box">
+        <p>
+            Low-lying areas may experience
+            temporary water accumulation.
+        </p>
 
-            <h4>
-                🛡️ Action
-            </h4>
+    </div>
 
-            <p class="action">
-                Avoid low-lying roads and unnecessary travel
-                during peak rainfall.
-            </p>
+
+    <div class="hazard">
+
+        <div class="hazard-top">
+
+            <div class="hazard-icon">
+                💨
+            </div>
+
+            <span class="hazard-status low">
+                LOW
+            </span>
 
         </div>
 
+        <h3>Strong Wind</h3>
+
+        <p>
+            Current wind conditions are
+            not highly concerning.
+        </p>
+
+    </div>
+
+
+    <div class="hazard">
+
+        <div class="hazard-top">
+
+            <div class="hazard-icon">
+                ⚡
+            </div>
+
+            <span class="hazard-status medium">
+                WATCH
+            </span>
+
+        </div>
+
+        <h3>Lightning</h3>
+
+        <p>
+            Monitor official warnings
+            during heavy rainfall.
+        </p>
 
     </div>
 
@@ -777,32 +2009,116 @@ footer {
 
 
 
-<!-- HYPERLOCAL RISK MAP -->
+<!-- =========================================================
+     ACTION CENTER
+========================================================= -->
 
-<h2 class="section-title">
-    Hyperlocal Risk Map
-</h2>
+<div style="margin-top:30px;" class="section-title">
+
+    <h2>🎯 Action Center</h2>
+
+    <p>
+        Practical recommendations based on weather conditions
+    </p>
+
+</div>
 
 
-<div class="card">
-
-    <div class="map">
+<div class="action-grid">
 
 
-        <div class="map-zone zone-red">
-            High Risk Zone
+    <div class="action-card">
+
+        <div class="action-icon">
+            🚌
         </div>
 
+        <h3>Travel Safety</h3>
 
-        <div class="map-zone zone-yellow">
-            Moderate Risk
+        <p>
+            Avoid low-lying roads during peak rainfall.
+            Check conditions before starting your journey.
+        </p>
+
+    </div>
+
+
+    <div class="action-card">
+
+        <div class="action-icon">
+            🎓
         </div>
 
+        <h3>College / School Commute</h3>
 
-        <div class="map-pin">
-            📍 Dehradun
+        <p>
+            Carry rain protection and keep extra travel time
+            during evening rainfall.
+        </p>
+
+    </div>
+
+
+    <div class="action-card">
+
+        <div class="action-icon">
+            🌾
         </div>
 
+        <h3>Farmer Mode</h3>
+
+        <p>
+            Check field drainage and consider postponing
+            spraying activities before heavy rain.
+        </p>
+
+    </div>
+
+
+    <div class="action-card">
+
+        <div class="action-icon">
+            🏠
+        </div>
+
+        <h3>Home Preparedness</h3>
+
+        <p>
+            Check drainage, windows and outdoor objects
+            before severe weather develops.
+        </p>
+
+    </div>
+
+
+    <div class="action-card">
+
+        <div class="action-icon">
+            👨‍👩‍👧
+        </div>
+
+        <h3>Family Safety</h3>
+
+        <p>
+            Keep emergency contacts, medicines,
+            important documents and a charged phone ready.
+        </p>
+
+    </div>
+
+
+    <div class="action-card">
+
+        <div class="action-icon">
+            🔋
+        </div>
+
+        <h3>Power-Cut Preparation</h3>
+
+        <p>
+            Charge your phone and power bank and keep
+            a flashlight easily accessible.
+        </p>
 
     </div>
 
@@ -810,307 +2126,605 @@ footer {
 
 
 
-<!-- RISK SNAPSHOT -->
+<!-- =========================================================
+     AI ASSISTANT
+========================================================= -->
 
-<h2 class="section-title">
-    Risk Snapshot
-</h2>
+<div
+    id="aiSection"
+    style="margin-top:32px;"
+    class="section-title"
+>
 
+    <h2>🤖 MausamSetu AI Weather Assistant</h2>
 
-<div class="card">
-
-    <div class="risk-grid">
-
-
-        <div class="risk-card">
-
-            <h3>
-                🌧️ Rainfall
-            </h3>
-
-            <div class="risk-value high">
-                HIGH
-            </div>
-
-        </div>
-
-
-        <div class="risk-card">
-
-            <h3>
-                🚗 Travel
-            </h3>
-
-            <div class="risk-value medium">
-                CAUTION
-            </div>
-
-        </div>
-
-
-        <div class="risk-card">
-
-            <h3>
-                🌊 Flood Risk
-            </h3>
-
-            <div class="risk-value high">
-                HIGH
-            </div>
-
-        </div>
-
-
-        <div class="risk-card">
-
-            <h3>
-                ⚠️ Alert
-            </h3>
-
-            <div class="risk-value advisory">
-                ADVISORY
-            </div>
-
-        </div>
-
-
-    </div>
+    <p>
+        Ask questions in natural language and get
+        decision-focused answers
+    </p>
 
 </div>
 
 
-
-<!-- WHAT SHOULD I DO -->
-
-<h2 class="section-title">
-    What Should I Do?
-</h2>
+<div class="ai-grid">
 
 
-<div class="card">
+    <div class="chat">
 
-    <div class="action-grid">
+        <div class="chat-header">
 
+            <div>
 
-        <div class="action-card">
+                <b>Weather Decision Assistant</b>
 
-            <h3>
-                🚗 Traveler
-            </h3>
+                <div style="
+                    font-size:11px;
+                    margin-top:3px;
+                ">
+                    Ask about weather, travel, safety or preparation
+                </div>
 
-            <p>
-                Avoid low-lying roads during heavy rainfall.
-                Check weather conditions before travelling.
-            </p>
+            </div>
 
-        </div>
-
-
-        <div class="action-card">
-
-            <h3>
-                🌾 Farmer
-            </h3>
-
-            <p>
-                Monitor rainfall conditions and protect
-                crops from excess water where required.
-            </p>
+            <span class="ai-badge">
+                AI PROTOTYPE
+            </span>
 
         </div>
 
 
-        <div class="action-card">
-
-            <h3>
-                🏠 Citizen
-            </h3>
-
-            <p>
-                Stay indoors during peak rainfall and
-                follow official local advisories.
-            </p>
-
-        </div>
-
-
-        <div class="action-card">
-
-            <h3>
-                🏢 Authority
-            </h3>
-
-            <p>
-                Monitor high-risk zones and prepare
-                response teams for possible flooding.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- WEATHER INTELLIGENCE -->
-
-<h2 class="section-title">
-    Weather Intelligence
-</h2>
-
-
-<div class="card">
-
-    <div class="source-grid">
-
-
-        <div class="source">
-
-            <h3>
-                🌦️ Weather Forecast
-            </h3>
-
-            <p>
-                Forecast information for local conditions.
-            </p>
-
-        </div>
-
-
-        <div class="source">
-
-            <h3>
-                ⚠️ Official Alerts
-            </h3>
-
-            <p>
-                Weather warnings and disaster advisories.
-            </p>
-
-        </div>
-
-
-        <div class="source">
-
-            <h3>
-                🛰️ Satellite Data
-            </h3>
-
-            <p>
-                Satellite and climate-based information.
-            </p>
-
-        </div>
-
-
-        <div class="source">
-
-            <h3>
-                📊 Forecast Models
-            </h3>
-
-            <p>
-                Model-based weather predictions.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- ASK WEATHERGPT -->
-
-<h2 class="section-title">
-    Ask WeatherGPT
-</h2>
-
-
-<div class="card">
-
-
-    <!-- CHAT AREA -->
-
-    <div
-        class="chat-box"
-        id="chatBox"
-    >
-
-        <div class="chat-message bot">
-
-            <strong>
-                WeatherGPT 🤖
-            </strong>
-
-            <br>
-
-            Hello! Ask me about today's weather,
-            travel safety, rainfall or weather risk.
-
-        </div>
-
-    </div>
-
-
-    <!-- TYPE MESSAGE -->
-
-    <div class="chat-input-area">
-
-        <input
-            type="text"
-            id="userInput"
-            placeholder="Ask WeatherGPT anything about weather..."
-            onkeydown="handleEnter(event)"
+        <div
+            class="chat-body"
+            id="chatBody"
         >
 
-        <button onclick="sendMessage()">
-            Send ➤
-        </button>
+            <div class="message bot">
+
+                👋 Hello! I'm MausamSetu.
+
+                <br><br>
+
+                I can help you understand weather
+                and decide what to do.
+
+                <br><br>
+
+                Try asking:
+                <br>
+                • Will it rain today?
+                <br>
+                • Is it safe to travel?
+                <br>
+                • What should I carry?
+                <br>
+                • Can I go outside?
+                <br>
+                • Is there a flood risk?
+                <br>
+                • How should I prepare?
+
+            </div>
+
+        </div>
+
+
+        <div class="quick">
+
+            <button onclick="quickAsk('Will it rain today?')">
+                🌧️ Rain?
+            </button>
+
+            <button onclick="quickAsk('Is it safe to travel?')">
+                🚌 Travel?
+            </button>
+
+            <button onclick="quickAsk('What should I carry?')">
+                🎒 Carry?
+            </button>
+
+            <button onclick="quickAsk('Can I go outside?')">
+                🏃 Outside?
+            </button>
+
+            <button onclick="quickAsk('Is there a flood risk?')">
+                🌊 Flood risk?
+            </button>
+
+        </div>
+
+
+        <div class="chat-input">
+
+            <button
+                class="chat-button voice"
+                onclick="startVoice()"
+                title="Voice input"
+            >
+                🎤
+            </button>
+
+            <input
+                id="userInput"
+                type="text"
+                placeholder="Ask MausamSetu..."
+                onkeydown="
+                    if(event.key==='Enter')
+                    sendMessage()
+                "
+            >
+
+            <button
+                class="chat-button"
+                onclick="sendMessage()"
+            >
+                Send
+            </button>
+
+        </div>
 
     </div>
 
 
-    <!-- QUICK QUESTIONS -->
 
-    <div class="quick-buttons">
+    <!-- QUICK DECISION -->
 
+    <div class="card">
+
+        <div class="card-title">
+
+            <h3>⚡ Quick Decision Center</h3>
+
+        </div>
+
+
+        <div class="quick-list">
+
+            <div class="quick-item">
+                <b>☂ What to Carry</b>
+                Umbrella, raincoat and waterproof bag
+            </div>
+
+            <div class="quick-item">
+                <b>🚌 Travel</b>
+                Use caution after 6 PM
+            </div>
+
+            <div class="quick-item">
+                <b>🏃 Outdoor</b>
+                Prefer morning or early afternoon
+            </div>
+
+            <div class="quick-item">
+                <b>📱 Phone</b>
+                Keep device and power bank charged
+            </div>
+
+            <div class="quick-item">
+                <b>📢 Alerts</b>
+                Monitor official warnings
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     AQI + SUN
+========================================================= -->
+
+<div
+    style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:16px;
+        margin-top:22px;
+    "
+>
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <h3>🌿 Air Quality</h3>
+
+            <span>Current estimate</span>
+
+        </div>
+
+
+        <div class="aqi-box">
+
+            <div class="aqi-score">
+
+                <strong>48</strong>
+
+                <span>AQI</span>
+
+            </div>
+
+
+            <div class="aqi-info">
+
+                <b>Good</b>
+
+                <p style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:5px;
+                ">
+                    Air quality is suitable for
+                    most outdoor activities.
+                </p>
+
+                <div class="aqi-bar">
+                    <div class="aqi-fill"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="card">
+
+        <div class="card-title">
+
+            <h3>🌅 Sun Information</h3>
+
+        </div>
+
+
+        <div class="sun-grid">
+
+
+            <div class="sun">
+
+                <div class="sun-icon">
+                    🌅
+                </div>
+
+                <div class="sun-time">
+                    5:58 AM
+                </div>
+
+                <div class="sun-label">
+                    Sunrise
+                </div>
+
+            </div>
+
+
+            <div class="sun">
+
+                <div class="sun-icon">
+                    🌇
+                </div>
+
+                <div class="sun-time">
+                    6:18 PM
+                </div>
+
+                <div class="sun-label">
+                    Sunset
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     COMPARE LOCATIONS
+========================================================= -->
+
+<div style="margin-top:32px;" class="section-title">
+
+    <h2>📍 Compare Locations</h2>
+
+    <p>
+        Compare weather conditions between two places
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <div class="compare">
+
+
+        <div class="compare-box">
+
+            <h3>
+                📍 Dehradun
+            </h3>
+
+            <div class="compare-temp">
+                27°C
+            </div>
+
+            <div class="compare-info">
+                🌧️ Rain 70% · Wind 14 km/h
+            </div>
+
+        </div>
+
+
+        <div class="compare-box">
+
+            <h3>
+                📍 Delhi
+            </h3>
+
+            <div class="compare-temp">
+                31°C
+            </div>
+
+            <div class="compare-info">
+                🌤️ Rain 30% · Wind 11 km/h
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PREPAREDNESS CHECKLIST
+========================================================= -->
+
+<div style="margin-top:32px;" class="section-title">
+
+    <h2>🏠 Weather Preparedness Checklist</h2>
+
+    <p>
+        Quick checklist before severe weather
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <div class="checklist">
+
+        <label class="check">
+            <input type="checkbox">
+            Charge phone and power bank
+        </label>
+
+        <label class="check">
+            <input type="checkbox">
+            Keep flashlight accessible
+        </label>
+
+        <label class="check">
+            <input type="checkbox">
+            Keep important documents protected
+        </label>
+
+        <label class="check">
+            <input type="checkbox">
+            Check home drainage
+        </label>
+
+        <label class="check">
+            <input type="checkbox">
+            Check official weather warnings
+        </label>
+
+        <label class="check">
+            <input type="checkbox">
+            Avoid unnecessary travel during severe weather
+        </label>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     SAFE PLACES
+========================================================= -->
+
+<div style="margin-top:32px;" class="section-title">
+
+    <h2>🛡️ Nearby Safe-Place Guidance</h2>
+
+    <p>
+        Useful categories to consider during severe weather
+    </p>
+
+</div>
+
+
+<div class="safe-grid">
+
+
+    <div class="safe">
+
+        <div class="safe-icon">
+            🏥
+        </div>
+
+        <h3>Hospital / Medical Facility</h3>
+
+        <p>
+            Identify the nearest accessible medical facility
+            before severe conditions develop.
+        </p>
+
+    </div>
+
+
+    <div class="safe">
+
+        <div class="safe-icon">
+            🏫
+        </div>
+
+        <h3>Public Building</h3>
+
+        <p>
+            Schools, colleges and public buildings may provide
+            safer shelter depending on official guidance.
+        </p>
+
+    </div>
+
+
+    <div class="safe">
+
+        <div class="safe-icon">
+            🏠
+        </div>
+
+        <h3>Safe Indoor Area</h3>
+
+        <p>
+            During heavy rain or lightning, move indoors
+            and avoid exposed open areas.
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     ALERT
+========================================================= -->
+
+<div
+    class="alert"
+    id="alertBox"
+>
+
+    <h3>
+        ⚠️ Weather Advisory
+    </h3>
+
+    <p>
+        Heavy rainfall may develop this evening.
+        Avoid low-lying roads and monitor official
+        weather warnings.
+    </p>
+
+
+    <div class="alert-buttons">
+
+        <button onclick="simulateAlert()">
+            🚨 Simulate Emergency Alert
+        </button>
 
         <button
-            onclick="askWeather('Rain today?')"
+            class="secondary"
+            onclick="saveAlert()"
         >
-            🌧️ Rain today?
+            🔔 Save Alert Preference
         </button>
 
+    </div>
 
-        <button
-            onclick="askWeather('Is travel safe?')"
-        >
-            🚗 Travel safe?
-        </button>
+</div>
 
 
-        <button
-            onclick="askWeather('Farmer advice')"
-        >
-            🌾 Farmer advice
-        </button>
+
+<!-- =========================================================
+     SOURCES
+========================================================= -->
+
+<div style="margin-top:32px;" class="section-title">
+
+    <h2>🌐 Weather Intelligence Sources</h2>
+
+    <p>
+        Data sources that can be connected in the full system
+    </p>
+
+</div>
 
 
-        <button
-            onclick="askWeather('Risk level')"
-        >
-            ⚠️ Risk level
-        </button>
+<div class="sources">
 
+
+    <div class="source">
+
+        <div class="source-icon">
+            🌦️
+        </div>
+
+        <b>IMD Forecast</b>
+
+        <span>
+            Official weather forecasts
+        </span>
 
     </div>
 
 
+    <div class="source">
+
+        <div class="source-icon">
+            🛰️
+        </div>
+
+        <b>Satellite Data</b>
+
+        <span>
+            Weather observation
+        </span>
+
+    </div>
+
+
+    <div class="source">
+
+        <div class="source-icon">
+            📡
+        </div>
+
+        <b>Radar / Nowcast</b>
+
+        <span>
+            Short-term rainfall monitoring
+        </span>
+
+    </div>
+
+
+    <div class="source">
+
+        <div class="source-icon">
+            📊
+        </div>
+
+        <b>Climate Data</b>
+
+        <span>
+            Historical patterns
+        </span>
+
+    </div>
+
 </div>
 
 
@@ -1118,78 +2732,496 @@ footer {
 
 
 
-<!-- FOOTER -->
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <footer>
 
-    WeatherGPT • Prototype
+    <b style="font-size:17px;">
+        MausamSetu
+    </b>
+
+    <br>
+
+    Weather → Risk → Decision → Action
+
+    <br><br>
+
+    Prototype using demo weather data.
+    Live APIs, production AI and emergency services
+    are not connected in this prototype.
 
 </footer>
 
 
 
+<!-- =========================================================
+     EMERGENCY MODAL
+========================================================= -->
+
+<div
+    class="modal"
+    id="emergencyModal"
+>
+
+    <div class="modal-content">
+
+        <h2>
+            🚨 Emergency Weather Mode
+        </h2>
+
+        <p>
+            If severe weather is occurring, prioritize
+            official emergency instructions and move to
+            a safer location when advised.
+        </p>
+
+
+        <div style="
+            margin-top:15px;
+            padding:13px;
+            background:#fff1f1;
+            border-radius:12px;
+        ">
+
+            <b>Immediate checklist</b>
+
+            <br><br>
+
+            • Stay indoors when advised
+            <br>
+            • Avoid flooded roads
+            <br>
+            • Stay away from exposed areas during lightning
+            <br>
+            • Keep phone charged
+            <br>
+            • Follow official warnings
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="close"
+                onclick="closeEmergency()"
+            >
+                Close
+            </button>
+
+            <button
+                class="confirm"
+                onclick="simulateAlert();closeEmergency();"
+            >
+                Trigger Demo Alert
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
 <script>
 
+/* =========================================================
+   DATE + TIME
+========================================================= */
 
-/* DATE & TIME */
-
-function updateDateTime() {
+function updateClock(){
 
     const now = new Date();
 
-
     const date =
         now.toLocaleDateString(
-            'en-IN',
+            "en-IN",
             {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
+                weekday:"short",
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
             }
         );
-
 
     const time =
         now.toLocaleTimeString(
-            'en-IN',
+            "en-IN",
             {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                hour:"2-digit",
+                minute:"2-digit",
+                second:"2-digit"
             }
         );
 
+    document.getElementById("currentDate")
+        .innerText = "📅 " + date;
 
-    document.getElementById("date").innerText =
-        date;
-
-
-    document.getElementById("time").innerText =
-        time;
-
+    document.getElementById("currentTime")
+        .innerText = "🕒 " + time;
 }
 
-
-updateDateTime();
-
+updateClock();
 
 setInterval(
-    updateDateTime,
+    updateClock,
     1000
 );
 
 
+/* =========================================================
+   LOCATION
+========================================================= */
 
-/* QUICK QUESTIONS */
+function detectLocation(){
 
-function askWeather(question) {
+    if(!navigator.geolocation){
+
+        alert(
+            "Your browser does not support location detection."
+        );
+
+        return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            const latitude =
+                position.coords.latitude.toFixed(2);
+
+            const longitude =
+                position.coords.longitude.toFixed(2);
+
+
+            const location =
+                "📍 Current Location (" +
+                latitude +
+                ", " +
+                longitude +
+                ")";
+
+
+            document.getElementById(
+                "locationText"
+            ).innerText = location;
+
+
+            document.getElementById(
+                "heroLocation"
+            ).innerText = location;
+
+        },
+
+
+        function(){
+
+            alert(
+                "Location permission was not provided. " +
+                "Showing demo location: Dehradun."
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================================================
+   SCROLL TO AI
+========================================================= */
+
+function scrollToAI(){
+
+    document.getElementById(
+        "aiSection"
+    ).scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   AI CHAT
+========================================================= */
+
+function addMessage(
+    text,
+    type
+){
+
+    const body =
+        document.getElementById(
+            "chatBody"
+        );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        "message " + type;
+
+
+    message.innerHTML =
+        text;
+
+
+    body.appendChild(
+        message
+    );
+
+
+    body.scrollTop =
+        body.scrollHeight;
+
+}
+
+
+function getAIResponse(question){
+
+    const q =
+        question.toLowerCase();
+
+
+    if(
+        q.includes("rain") ||
+        q.includes("barish") ||
+        q.includes("बारिश")
+    ){
+
+        return `
+        🌧️ <b>Rain Outlook</b><br><br>
+        Rain probability is around 70%.
+        The possibility increases during the evening,
+        with the highest demo risk around 8 PM.
+        `;
+
+    }
+
+
+    if(
+        q.includes("travel") ||
+        q.includes("road") ||
+        q.includes("journey")
+    ){
+
+        return `
+        🚌 <b>Travel Advice</b><br><br>
+        Travel is possible with caution.
+        Avoid low-lying and waterlogged roads
+        during peak rainfall.
+        `;
+
+    }
+
+
+    if(
+        q.includes("carry") ||
+        q.includes("umbrella") ||
+        q.includes("bag")
+    ){
+
+        return `
+        🎒 <b>What to Carry</b><br><br>
+        Carry an umbrella or raincoat,
+        waterproof your important items,
+        and keep your phone charged.
+        `;
+
+    }
+
+
+    if(
+        q.includes("outside") ||
+        q.includes("outdoor") ||
+        q.includes("play")
+    ){
+
+        return `
+        🏃 <b>Outdoor Advice</b><br><br>
+        Outdoor activities are more suitable
+        before the expected peak rainfall period.
+        `;
+
+    }
+
+
+    if(
+        q.includes("flood") ||
+        q.includes("water")
+    ){
+
+        return `
+        🌊 <b>Flood / Waterlogging Risk</b><br><br>
+        Low-lying areas may experience water accumulation
+        during heavy rainfall. Avoid crossing flooded roads.
+        `;
+
+    }
+
+
+    if(
+        q.includes("temperature") ||
+        q.includes("hot") ||
+        q.includes("cold")
+    ){
+
+        return `
+        🌡️ <b>Temperature</b><br><br>
+        Current demo temperature is 27°C
+        and feels like 29°C.
+        `;
+
+    }
+
+
+    if(
+        q.includes("aqi") ||
+        q.includes("air quality")
+    ){
+
+        return `
+        🌿 <b>Air Quality</b><br><br>
+        Demo AQI is 48, which is in the
+        good range for most people.
+        `;
+
+    }
+
+
+    if(
+        q.includes("sunrise") ||
+        q.includes("sunset")
+    ){
+
+        return `
+        🌅 <b>Sun Information</b><br><br>
+        Sunrise: 5:58 AM<br>
+        Sunset: 6:18 PM
+        `;
+
+    }
+
+
+    if(
+        q.includes("emergency") ||
+        q.includes("prepare") ||
+        q.includes("safety")
+    ){
+
+        return `
+        🚨 <b>Safety Preparation</b><br><br>
+        Keep your phone and power bank charged,
+        secure important items, avoid flooded areas
+        and follow official emergency instructions.
+        `;
+
+    }
+
+
+    if(
+        q.includes("farmer") ||
+        q.includes("farm")
+    ){
+
+        return `
+        🌾 <b>Farmer Advice</b><br><br>
+        Check field drainage and avoid spraying
+        immediately before expected heavy rainfall.
+        `;
+
+    }
+
+
+    if(
+        q.includes("college") ||
+        q.includes("school")
+    ){
+
+        return `
+        🎓 <b>College / School Commute</b><br><br>
+        Carry rain protection and allow extra
+        travel time during evening rainfall.
+        `;
+
+    }
+
+
+    return `
+    🤖 <b>MausamSetu Assistant</b><br><br>
+    I can help with:
+    <br>🌧️ Rain
+    <br>🚌 Travel
+    <br>🎒 What to carry
+    <br>🏃 Outdoor activities
+    <br>🌊 Flood risk
+    <br>🌡️ Temperature
+    <br>🌿 AQI
+    <br>🚨 Safety preparation
+    `;
+
+}
+
+
+function sendMessage(){
 
     const input =
-        document.getElementById("userInput");
+        document.getElementById(
+            "userInput"
+        );
 
 
-    input.value = question;
+    const question =
+        input.value.trim();
+
+
+    if(question === "")
+        return;
+
+
+    addMessage(
+        question,
+        "user"
+    );
+
+
+    input.value = "";
+
+
+    setTimeout(
+
+        function(){
+
+            addMessage(
+                getAIResponse(question),
+                "bot"
+            );
+
+        },
+
+        450
+
+    );
+
+}
+
+
+function quickAsk(question){
+
+    document.getElementById(
+        "userInput"
+    ).value = question;
 
 
     sendMessage();
@@ -1197,204 +3229,228 @@ function askWeather(question) {
 }
 
 
+/* =========================================================
+   VOICE INPUT
+========================================================= */
 
-/* SEND MESSAGE */
+function startVoice(){
 
-function sendMessage() {
-
-    const input =
-        document.getElementById("userInput");
-
-
-    const question =
-        input.value.trim();
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
 
-    if (question === "") {
+    if(!SpeechRecognition){
+
+        alert(
+            "Voice input is not supported in this browser."
+        );
 
         return;
-
     }
 
 
-    const chatBox =
-        document.getElementById("chatBox");
+    const recognition =
+        new SpeechRecognition();
 
 
-    /* USER MESSAGE */
-
-    const userMessage =
-        document.createElement("div");
+    recognition.lang =
+        "en-IN";
 
 
-    userMessage.className =
-        "chat-message user";
+    recognition.start();
 
 
-    userMessage.innerHTML =
-        "<strong>You</strong><br>" +
-        question;
+    recognition.onresult =
+        function(event){
+
+            const text =
+                event.results[0][0].transcript;
 
 
-    chatBox.appendChild(
-        userMessage
+            document.getElementById(
+                "userInput"
+            ).value = text;
+
+
+            sendMessage();
+
+        };
+
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+function changeLanguage(language){
+
+    if(language === "hi"){
+
+        alert(
+            "Hindi interface is planned for the next version."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   EMERGENCY MODE
+========================================================= */
+
+function emergencyMode(){
+
+    document.getElementById(
+        "emergencyModal"
+    ).style.display = "flex";
+
+}
+
+
+function closeEmergency(){
+
+    document.getElementById(
+        "emergencyModal"
+    ).style.display = "none";
+
+}
+
+
+/* =========================================================
+   ALERT SIMULATION
+========================================================= */
+
+function simulateAlert(){
+
+    const alertBox =
+        document.getElementById(
+            "alertBox"
+        );
+
+
+    alertBox.style.background =
+        "#ffe4e4";
+
+
+    alertBox.style.borderLeftColor =
+        "#d64545";
+
+
+    alertBox.innerHTML = `
+
+        <h3>
+            🚨 HIGH PRIORITY WEATHER ALERT
+        </h3>
+
+        <p>
+            Heavy rainfall risk has increased.
+            Avoid low-lying areas, unnecessary travel
+            and waterlogged roads.
+            Follow official emergency instructions.
+        </p>
+
+        <div class="alert-buttons">
+
+            <button
+                onclick="resetAlert()"
+            >
+                Reset Demo Alert
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function resetAlert(){
+
+    const alertBox =
+        document.getElementById(
+            "alertBox"
+        );
+
+
+    alertBox.style.background =
+        "#fff5df";
+
+
+    alertBox.style.borderLeftColor =
+        "#dc9a25";
+
+
+    alertBox.innerHTML = `
+
+        <h3>
+            ⚠️ Weather Advisory
+        </h3>
+
+        <p>
+            Heavy rainfall may develop this evening.
+            Avoid low-lying roads and monitor official
+            weather warnings.
+        </p>
+
+        <div class="alert-buttons">
+
+            <button onclick="simulateAlert()">
+                🚨 Simulate Emergency Alert
+            </button>
+
+            <button
+                class="secondary"
+                onclick="saveAlert()"
+            >
+                🔔 Save Alert Preference
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   SAVE ALERT
+========================================================= */
+
+function saveAlert(){
+
+    alert(
+        "Demo alert preference saved for this session."
     );
 
-
-    input.value = "";
-
-
-    /* FIND ANSWER */
-
-    let answer = "";
+}
 
 
-    const lowerQuestion =
-        question.toLowerCase();
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================================= */
 
+window.onclick =
+    function(event){
 
-
-    if (
-        lowerQuestion.includes("rain") ||
-        lowerQuestion.includes("rainfall")
-    ) {
-
-        answer =
-            "Rain is possible today, with around 70% chance of rainfall. Heavy rainfall may occur during the evening.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("travel") ||
-        lowerQuestion.includes("safe") ||
-        lowerQuestion.includes("road")
-    ) {
-
-        answer =
-            "Travel with caution. Avoid low-lying roads during heavy rainfall and check official advisories before travelling.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("farmer") ||
-        lowerQuestion.includes("crop") ||
-        lowerQuestion.includes("farming")
-    ) {
-
-        answer =
-            "Farmers should monitor rainfall conditions and take precautions against excess water in fields.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("risk") ||
-        lowerQuestion.includes("danger") ||
-        lowerQuestion.includes("alert")
-    ) {
-
-        answer =
-            "Current rainfall risk is HIGH. Local flooding and travel disruption are possible during heavy rainfall.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("temperature") ||
-        lowerQuestion.includes("hot") ||
-        lowerQuestion.includes("cold")
-    ) {
-
-        answer =
-            "Current temperature in Dehradun is 27°C with partly cloudy conditions.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("weather")
-    ) {
-
-        answer =
-            "Current weather in Dehradun is 27°C and partly cloudy, with 72% humidity, 14 km/h wind and a 70% chance of rain.";
-
-    }
-
-
-    else if (
-        lowerQuestion.includes("humidity") ||
-        lowerQuestion.includes("wind")
-    ) {
-
-        answer =
-            "Current humidity is 72% and wind speed is around 14 km/h.";
-
-    }
-
-
-    else {
-
-        answer =
-            "Based on the available demo weather information, please ask about rainfall, travel safety, farmer advice, temperature, humidity or risk level.";
-
-    }
-
-
-
-    /* BOT RESPONSE */
-
-    setTimeout(
-        function() {
-
-
-            const botMessage =
-                document.createElement("div");
-
-
-            botMessage.className =
-                "chat-message bot";
-
-
-            botMessage.innerHTML =
-                "<strong>WeatherGPT 🤖</strong><br>" +
-                answer;
-
-
-            chatBox.appendChild(
-                botMessage
+        const modal =
+            document.getElementById(
+                "emergencyModal"
             );
 
 
-            chatBox.scrollTop =
-                chatBox.scrollHeight;
+        if(event.target === modal){
 
+            modal.style.display =
+                "none";
 
-        },
-        500
-    );
+        }
 
-}
-
-
-
-/* ENTER KEY */
-
-function handleEnter(event) {
-
-    if (
-        event.key === "Enter"
-    ) {
-
-        sendMessage();
-
-    }
-
-}
+    };
 
 </script>
-
 
 </body>
 </html>
